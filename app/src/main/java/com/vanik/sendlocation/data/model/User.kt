@@ -1,4 +1,4 @@
-package com.vanik.sendlocation.data
+package com.vanik.sendlocation.data.model
 
 import android.location.Location
 

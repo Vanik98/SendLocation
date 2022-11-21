@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "742100409463",
+    "project_id": "sendlocation-910f4",
+    "storage_bucket": "sendlocation-910f4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:742100409463:android:fdb431376d705ec5047a72",
+        "android_client_info": {
+          "package_name": "com.vanik.sendlocation"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "742100409463-j66vmruetca8mf5j0390cnsjvqivstve.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vanik.sendlocation",
+            "certificate_hash": "5b1a8878e53e7fa54d178e01812b6f2674b1589a"
+          }
+        },
+        {
+          "client_id": "742100409463-cqfheicjnlmc0e9n2q3i7tiqjh4sc4pf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4fnCmK0TJ5jFQzqeq_NVCxbirP-wl0FA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "742100409463-cqfheicjnlmc0e9n2q3i7tiqjh4sc4pf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

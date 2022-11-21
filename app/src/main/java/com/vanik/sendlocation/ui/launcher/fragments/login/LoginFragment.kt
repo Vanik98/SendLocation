@@ -1,4 +1,4 @@
-package com.vanik.sendlocation.ui.login
+package com.vanik.sendlocation.ui.launcher.fragments.login
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
