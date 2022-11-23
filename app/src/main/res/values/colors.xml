@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="blew">#426FE9</color>
     <color name="gray">#818181</color>
+    <color name="background">#090627</color>
+    <color name="change_background">#4C4A60</color>
 </resources>

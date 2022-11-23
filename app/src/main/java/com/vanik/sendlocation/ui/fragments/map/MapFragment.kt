@@ -1,4 +1,4 @@
-package com.vanik.sendlocation.ui.home.fragments.map
+package com.vanik.sendlocation.ui.fragments.map
 
 import androidx.fragment.app.Fragment
 

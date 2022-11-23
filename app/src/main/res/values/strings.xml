@@ -2,4 +2,7 @@
     <string name="app_name">SendLocation</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="login_code">Please enter your phone number to receive a verification code to log in.</string>
+    <string name="phone_number_example">+374 11 22 33</string>
+    <string name="login">Login</string>
 </resources>

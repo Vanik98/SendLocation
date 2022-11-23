@@ -32,6 +32,9 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures {
+        dataBinding true
+    }
 }
 
 apply plugin: 'kotlin-kapt'
@@ -47,6 +50,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth-ktx:21.0.2'
     implementation 'com.google.android.gms:play-services-maps:18.0.2'
     implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     kapt roomDependencies.get("roomCompiler")
     implementation koinDependencies.values()
     implementation kotlinxSerializationDependencie.values()
