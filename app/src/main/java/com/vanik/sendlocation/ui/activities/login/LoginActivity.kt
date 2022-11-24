@@ -1,7 +1,6 @@
 package com.vanik.sendlocation.ui.activities.login
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -9,17 +8,17 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import com.google.firebase.FirebaseException
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
-import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.vanik.sendlocation.R
 import com.vanik.sendlocation.databinding.ActivityLoginBinding
 import com.vanik.sendlocation.ui.BaseActivity
 import com.vanik.sendlocation.ui.activities.home.HomeActivity
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
 class LoginActivity : BaseActivity() {
+    private val viewModel: LoginViewModel by viewModel()
     private lateinit var binding: ActivityLoginBinding
     private lateinit var num0: TextView
     private lateinit var num1: TextView
@@ -42,8 +41,9 @@ class LoginActivity : BaseActivity() {
     private lateinit var verifyNum6: TextView
     private lateinit var backIv: ImageView
     private lateinit var resentTv: TextView
-    private lateinit var verifyTv : TextView
-    private lateinit var verifySpaceTv : TextView
+    private lateinit var verifyTv: TextView
+    private lateinit var verifySpaceTv: TextView
+    private var firebaseVerifyId = ""
     private var number = "+374 "
     private var verifyNumber = ""
     private var showVerificationView = false
@@ -84,7 +84,7 @@ class LoginActivity : BaseActivity() {
         numClicks()
     }
 
-    private fun back(){
+    private fun back() {
         backIv.setOnClickListener {
             showVerificationView = false
             changeView()
@@ -93,21 +93,28 @@ class LoginActivity : BaseActivity() {
         }
     }
 
-    private fun confirm(){
+    private fun confirm() {
         confirmTv.setOnClickListener {
             showVerificationView = true
             changeView()
             confirmTv.visibility = View.GONE
             verifyTv.visibility = View.VISIBLE
-            //            sendSms()
+//            number = "+12345678910"
+            sendSms()
         }
     }
 
-    private fun verify(){
-        verifyTv.setOnClickListener{
+    private fun verify() {
+        verifyTv.setOnClickListener {
             changeView()
+            Log.i("vanikTest", "code = $firebaseVerifyId")
+            Log.i("vanikTest", "code = $verifyNumber")
+            if (firebaseVerifyId.isNotEmpty()) {
+                login()
+            }
         }
     }
+
     private fun changeView() {
         if (!showVerificationView) {
             backIv.visibility = View.GONE
@@ -228,14 +235,14 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun setPhoneNumberTextView(n: Int) {
-        if(number.trim().length <= 12) {
+        if (number.length < 16) {
             number += n
             if (number.length % 3 != 0) {
                 number += " "
             }
             phoneNumberTv.text = number
-        }else{
-                showMessage("The number of digits exceeds the phone number length limit")
+        } else {
+            showMessage("The number of digits exceeds the phone number length limit")
         }
     }
 
@@ -254,33 +261,38 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun sendSms() {
-        val auth = FirebaseAuth.getInstance()
-        val options = PhoneAuthOptions.newBuilder(auth)
+        val options = viewModel.sendSms()
             .setPhoneNumber(number.trim())
             .setTimeout(60L, TimeUnit.SECONDS)
             .setActivity(this)
             .setCallbacks(object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                 override fun onVerificationCompleted(p: PhoneAuthCredential) {
-                    Log.i("vanikTest", "onVerificationCompleted")
+                    login()
                 }
 
                 override fun onVerificationFailed(p0: FirebaseException) {
                     Log.i("vanikTest", "onVerificationFailed")
                 }
 
+                override fun onCodeSent(
+                    verificationID: String,
+                    token: PhoneAuthProvider.ForceResendingToken
+                ) {
+                    super.onCodeSent(verificationID, token)
+                    firebaseVerifyId = verificationID
+                }
             })
             .build()
-        PhoneAuthProvider.verifyPhoneNumber(options)
+        viewModel.verify(options)
     }
 
-    private fun login(credential: PhoneAuthCredential) {
-        val auth = FirebaseAuth.getInstance()
-        auth.signInWithCredential(credential).addOnCompleteListener(this) { task ->
+     fun login()  {
+        viewModel.login(firebaseVerifyId, verifyNumber).addOnCompleteListener(this) { task ->
             if (task.isSuccessful) {
                 startActivity(Intent(this, HomeActivity::class.java))
                 this.finish()
             } else {
-
+                Log.i("vanikTest", task.exception.toString())
             }
         }
     }

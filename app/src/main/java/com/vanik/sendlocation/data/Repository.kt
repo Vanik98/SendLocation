@@ -1,16 +1,16 @@
 package com.vanik.sendlocation.data
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.google.firebase.FirebaseException
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import kotlinx.coroutines.flow.flow
-import java.util.concurrent.TimeUnit
 
-class Repository( private val fAuth: FirebaseAuth) {
+class Repository(
+    private val fAuth: FirebaseAuth,
+    private val optionsBuilder : PhoneAuthOptions.Builder
+) {
 
     fun isUserSignIn() = flow {
         val fUser = fAuth.currentUser
@@ -21,33 +21,17 @@ class Repository( private val fAuth: FirebaseAuth) {
         }
     }
 
-    fun registration(phoneNumber: String): LiveData<Boolean> {
-        var liveData = MutableLiveData<Boolean>()
-//        val phoneAuthOptions = PhoneAuthOptions.newBuilder()
-//            .setPhoneNumber(phoneNumber)
-//            .setTimeout(60L, TimeUnit.SECONDS)
-//            .setCallbacks(object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-//                override fun onVerificationCompleted(p: PhoneAuthCredential) {
-//                    liveData.value = true
-//                }
-//
-//                override fun onVerificationFailed(p0: FirebaseException) {
-//                    liveData.value = false
-//                }
-//
-//            })
-//            .build()
-        return liveData
-//         if(fAuth.currentUser != null){
-//             if(fAuth.currentUser?.phoneNumber?.isEmpty() == false){
-//                 //signin
-//                 emit(true)
-//             }else{
-//                 //
-//                 emit(falsew)
-//             }
-//         }
+    fun sendSms() = optionsBuilder
 
+    fun verify(options:PhoneAuthOptions){
+        PhoneAuthProvider.verifyPhoneNumber(options)
     }
+
+    fun login(firebaseVerifyId: String, verifyNumber: String): Task<AuthResult>  {
+        return fAuth.signInWithCredential(credential(firebaseVerifyId, verifyNumber))
+    }
+
+    private fun credential(firebaseVerifyCode: String, verifyNumber: String) =
+        PhoneAuthProvider.getCredential(firebaseVerifyCode, verifyNumber)
 
 }
