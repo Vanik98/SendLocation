@@ -36,7 +36,7 @@ private val useCaseModules = module {
 }
 
 private val repositoryModule = module {
-    single { Repository(get(), get()) }
+    single { Repository(get(), get(),get()) }
 }
 
 private val firebaseModule = module {

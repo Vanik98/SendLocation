@@ -1,10 +1,14 @@
 package com.vanik.sendlocation.data
 
 import android.annotation.SuppressLint
+import android.app.Application
 import android.content.ContentResolver
 import android.content.Context
+import android.content.pm.PackageManager
 import android.provider.ContactsContract
 import android.util.Log
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
@@ -18,6 +22,7 @@ import java.util.jar.Manifest
 class Repository(
     private val fAuth: FirebaseAuth,
     private val optionsBuilder : PhoneAuthOptions.Builder,
+    private val applicationContext: Application
 ) {
 
     fun isUserSignIn() = flow {
@@ -43,38 +48,29 @@ class Repository(
         PhoneAuthProvider.getCredential(firebaseVerifyCode, verifyNumber)
 
     @SuppressLint("Range")
-    fun getContactList(context: Context) : List<String> {
-
-        val list = arrayListOf<String>()
-        val cr: ContentResolver = context.contentResolver
-        val cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
-            null, null, null, null
-        )
-        if ((cur?.count ?: 0) > 0) {
-            while (cur != null && cur.moveToNext()) {
-                val id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID))
-                val name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
-                list.add(name)
-                if (cur.getInt(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
-                    val pCur = cr.query(
-                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                        null,
-                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                        arrayOf(id),
-                        null
-                    )
-                    while (pCur!!.moveToNext()) {
-                        val phoneNo = pCur.getString(
-                            pCur.getColumnIndex(
-                                ContactsContract.CommonDataKinds.Phone.NUMBER
-                            )
-                        )
+    fun getContactList(): List<User> {
+        val list = arrayListOf<User>()
+            val cr: ContentResolver = applicationContext.contentResolver
+            val cur = cr.query(
+                ContactsContract.Contacts.CONTENT_URI,
+                null, null, null, null
+            )
+            if ((cur?.count ?: 0) > 0) {
+                while (cur != null && cur.moveToNext()) {
+                    val id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID))
+                    val name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
+                    if (cur.getInt(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
+                        val pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", arrayOf(id), null)
+                        while (pCur!!.moveToNext()) {
+                            val phoneNo = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                            val user = User(fullName = "Full name: $name", phoneNumber = "Phone number: $phoneNo")
+                            list.add(user)
+                        }
+                        pCur.close()
                     }
-                    pCur.close()
                 }
             }
-        }
-        cur?.close()
+            cur?.close()
         return list
     }
 
