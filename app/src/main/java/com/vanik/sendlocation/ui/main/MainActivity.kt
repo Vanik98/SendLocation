@@ -1,12 +1,11 @@
-package com.vanik.sendlocation.ui.activities.main
+package com.vanik.sendlocation.ui.main
 
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import com.vanik.sendlocation.R
-import com.vanik.sendlocation.ui.BaseActivity
-import com.vanik.sendlocation.ui.activities.home.HomeActivity
-import com.vanik.sendlocation.ui.activities.login.LoginActivity
+import com.vanik.sendlocation.ui.base.BaseActivity
+import com.vanik.sendlocation.ui.home.HomeActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity() {

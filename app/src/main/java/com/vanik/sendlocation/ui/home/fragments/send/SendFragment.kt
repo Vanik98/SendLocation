@@ -1,4 +1,4 @@
-package com.vanik.sendlocation.ui.fragments.send
+package com.vanik.sendlocation.ui.home.fragments.send
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -6,7 +6,6 @@ import android.content.ContentResolver
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.ContactsContract
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.vanik.sendlocation.R
 import com.vanik.sendlocation.data.model.User
 import com.vanik.sendlocation.databinding.FragmentSendBinding
-import com.vanik.sendlocation.ui.adapters.UserAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SendFragment : Fragment() {

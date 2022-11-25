@@ -1,8 +1,7 @@
-package com.vanik.sendlocation.ui.adapters
+package com.vanik.sendlocation.ui.home.fragments.send
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.vanik.sendlocation.data.model.User
 import com.vanik.sendlocation.databinding.ItemUserBinding

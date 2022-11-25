@@ -1,4 +1,4 @@
-package com.vanik.sendlocation.ui.activities.login
+package com.vanik.sendlocation.ui.login
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,8 +12,8 @@ import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
 import com.vanik.sendlocation.R
 import com.vanik.sendlocation.databinding.ActivityLoginBinding
-import com.vanik.sendlocation.ui.BaseActivity
-import com.vanik.sendlocation.ui.activities.home.HomeActivity
+import com.vanik.sendlocation.ui.base.BaseActivity
+import com.vanik.sendlocation.ui.home.HomeActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 

@@ -4,10 +4,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthOptions
 import com.vanik.sendlocation.data.Repository
 import com.vanik.sendlocation.domain.*
-import com.vanik.sendlocation.ui.activities.login.LoginViewModel
-import com.vanik.sendlocation.ui.activities.main.MainViewModel
-import com.vanik.sendlocation.ui.fragments.send.SendFragment
-import com.vanik.sendlocation.ui.fragments.send.SendViewModel
+import com.vanik.sendlocation.ui.login.LoginViewModel
+import com.vanik.sendlocation.ui.main.MainViewModel
+import com.vanik.sendlocation.ui.home.fragments.send.SendFragment
+import com.vanik.sendlocation.ui.home.fragments.send.SendViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 
 

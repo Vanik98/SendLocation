@@ -1,4 +1,4 @@
-package com.vanik.sendlocation.ui.fragments.send
+package com.vanik.sendlocation.ui.home.fragments.send
 
 import android.content.Context
 import androidx.lifecycle.ViewModel

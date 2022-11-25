@@ -1,4 +1,4 @@
-package com.vanik.sendlocation.ui
+package com.vanik.sendlocation.ui.base
 
 import android.os.Bundle
 import android.view.LayoutInflater
