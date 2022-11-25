@@ -1,4 +1,4 @@
-package com.vanik.sendlocation.ui.activities.login
+package com.vanik.sendlocation.ui.login
 
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.tasks.Task

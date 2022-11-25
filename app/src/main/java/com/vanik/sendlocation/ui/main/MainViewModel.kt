@@ -1,4 +1,4 @@
-package com.vanik.sendlocation.ui.activities.main
+package com.vanik.sendlocation.ui.main
 
 import androidx.lifecycle.ViewModel
 import com.vanik.sendlocation.domain.CheckIsUserSignInUseCase
