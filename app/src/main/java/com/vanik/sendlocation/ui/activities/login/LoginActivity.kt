@@ -110,6 +110,7 @@ class LoginActivity : BaseActivity() {
             Log.i("vanikTest", "code = $firebaseVerifyId")
             Log.i("vanikTest", "code = $verifyNumber")
             if (firebaseVerifyId.isNotEmpty()) {
+//                number = "+12345678910"
                 login()
             }
         }

@@ -24,14 +24,14 @@ class MainActivity : BaseActivity() {
     }
 
     private fun checkIsUserSignIn() {
-        viewModel.isUserSignIn().observe(this) {
-            if (it == true) {
+//        viewModel.isUserSignIn().observe(this) {
+//            if (it == true) {
                 startActivity(Intent(this, HomeActivity::class.java))
                 finish()
-            } else {
-                startActivity(Intent(this, LoginActivity::class.java))
-                finish()
-            }
-        }
+//            } else {
+//                startActivity(Intent(this, LoginActivity::class.java))
+//                finish()
+//            }
+      //  }
     }
 }

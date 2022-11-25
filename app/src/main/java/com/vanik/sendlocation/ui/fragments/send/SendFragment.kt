@@ -1,60 +1,80 @@
 package com.vanik.sendlocation.ui.fragments.send
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.ContentResolver
+import android.content.pm.PackageManager
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.provider.ContactsContract
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.vanik.sendlocation.R
+import com.vanik.sendlocation.data.model.User
+import com.vanik.sendlocation.databinding.FragmentSendBinding
+import com.vanik.sendlocation.ui.adapters.UserAdapter
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [SendFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class SendFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
-
+    private val viewModel: SendViewModel by viewModel()
+    private lateinit var binding: FragmentSendBinding
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_send, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_send, container, false)
+        setupViews()
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SendFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SendFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+//    private fun getContacts() = context?.let { viewModel.getContacts(it) }
+
+    private fun setupViews(){
+        initializeAdapter()
+    }
+
+    private fun initializeAdapter() {
+        val resultRecyclerView = binding.userRecyclerView
+        val layoutManager = LinearLayoutManager(requireActivity())
+        resultRecyclerView.layoutManager = layoutManager
+        resultRecyclerView.adapter = UserAdapter(getContactList())
+    }
+
+    @SuppressLint("Range")
+    fun getContactList(): List<User> {
+        val list = arrayListOf<User>()
+        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.READ_CONTACTS), 100)
+        } else {
+            val cr: ContentResolver = requireContext().contentResolver
+            val cur = cr.query(
+                ContactsContract.Contacts.CONTENT_URI,
+                null, null, null, null
+            )
+            if ((cur?.count ?: 0) > 0) {
+                while (cur != null && cur.moveToNext()) {
+                    val id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID))
+                    val name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
+                    if (cur.getInt(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
+                        val pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", arrayOf(id), null)
+                        while (pCur!!.moveToNext()) {
+                            val phoneNo = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                            val user = User(fullName = "Full name: $name", phoneNumber = "Phone number: $phoneNo")
+                            list.add(user)
+                        }
+                        pCur.close()
+                    }
                 }
             }
+            cur?.close()
+        }
+        return list
     }
 }
