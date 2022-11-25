@@ -15,5 +15,5 @@ class VerifyUseCase(private val repository: Repository){
     fun execute(options: PhoneAuthOptions) = repository.verify(options)
 }
 class CheckIsUserSignInUseCase(private val repository: Repository){
-    fun execute()  = repository.isUserSignIn().asLiveData()
+    fun execute()  = repository.isUserSignIn()
 }

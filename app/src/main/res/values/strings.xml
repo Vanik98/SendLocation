@@ -5,4 +5,5 @@
     <string name="login_code">Please enter your phone number to receive a verification code to log in.</string>
     <string name="phone_number_example">+374 11 22 33</string>
     <string name="login">Login</string>
+    <string name="loading">Loading...</string>
 </resources>

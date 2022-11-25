@@ -15,7 +15,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.vanik.sendlocation.data.model.User
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import java.util.jar.Manifest
 
 
@@ -48,8 +50,8 @@ class Repository(
         PhoneAuthProvider.getCredential(firebaseVerifyCode, verifyNumber)
 
     @SuppressLint("Range")
-    fun getContactList(): List<User> {
-        val list = arrayListOf<User>()
+    fun getContactList() = flow {
+        val users = arrayListOf<User>()
             val cr: ContentResolver = applicationContext.contentResolver
             val cur = cr.query(
                 ContactsContract.Contacts.CONTENT_URI,
@@ -64,14 +66,14 @@ class Repository(
                         while (pCur!!.moveToNext()) {
                             val phoneNo = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
                             val user = User(fullName = "Full name: $name", phoneNumber = "Phone number: $phoneNo")
-                            list.add(user)
+                            users.add(user)
                         }
                         pCur.close()
                     }
                 }
             }
             cur?.close()
-        return list
-    }
+        emit(users)
+    }.flowOn(Dispatchers.IO)
 
 }

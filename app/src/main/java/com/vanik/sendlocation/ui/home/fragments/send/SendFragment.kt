@@ -17,11 +17,20 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.vanik.sendlocation.R
 import com.vanik.sendlocation.data.model.User
 import com.vanik.sendlocation.databinding.FragmentSendBinding
+import com.vanik.sendlocation.ui.base.BaseActivity
+import com.vanik.sendlocation.ui.home.HomeActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SendFragment : Fragment() {
     private val viewModel: SendViewModel by viewModel()
     private lateinit var binding: FragmentSendBinding
+    private lateinit var adapter:UserAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (requireActivity() as HomeActivity).showDialog()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,7 +43,7 @@ class SendFragment : Fragment() {
 
 //    private fun getContacts() = context?.let { viewModel.getContacts(it) }
 
-    private fun setupViews(){
+    private fun setupViews() {
         initializeAdapter()
     }
 
@@ -43,15 +52,29 @@ class SendFragment : Fragment() {
         val layoutManager = LinearLayoutManager(requireActivity())
         resultRecyclerView.layoutManager = layoutManager
         resultRecyclerView.adapter = UserAdapter(getContactList())
+        adapter = resultRecyclerView.adapter as UserAdapter
     }
 
-    @SuppressLint("Range")
+    @SuppressLint("Range", "NotifyDataSetChanged")
     fun getContactList(): List<User> {
         val list = arrayListOf<User>()
-        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.READ_CONTACTS), 100)
+        if (ContextCompat.checkSelfPermission(
+                requireActivity(),
+                Manifest.permission.READ_CONTACTS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(Manifest.permission.READ_CONTACTS),
+                100
+            )
         } else {
-           list.addAll(viewModel.getContacts())
+            viewModel.getContacts().observe(requireActivity()) {
+                list.addAll(it)
+                adapter.notifyDataSetChanged()
+                (requireActivity() as HomeActivity).logChat(it[0].fullName)
+                (requireActivity() as HomeActivity).closeDialog()
+            }
         }
         return list
     }

@@ -6,6 +6,7 @@ import android.util.Log
 import com.vanik.sendlocation.R
 import com.vanik.sendlocation.ui.base.BaseActivity
 import com.vanik.sendlocation.ui.home.HomeActivity
+import kotlinx.coroutines.Dispatchers
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity() {
@@ -15,7 +16,7 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         checkIsUserSignIn()
-        showMessage("MainActivity")
+        showDialog()
     }
 
     override fun setUpViews() {
@@ -26,9 +27,11 @@ class MainActivity : BaseActivity() {
 //        viewModel.isUserSignIn().observe(this) {
 //            if (it == true) {
                 startActivity(Intent(this, HomeActivity::class.java))
+                closeDialog()
                 finish()
 //            } else {
 //                startActivity(Intent(this, LoginActivity::class.java))
+//                closeDialog()
 //                finish()
 //            }
       //  }

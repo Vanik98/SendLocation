@@ -17,7 +17,6 @@ class HomeActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-        showMessage("HomeActivity")
         viewPager = findViewById(R.id.home_view_pager)
         tabLayout = findViewById(R.id.home_tab_layout)
         fragmentAdapter = FragmentAdapter(supportFragmentManager,lifecycle)
